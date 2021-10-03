@@ -145,3 +145,67 @@ class Rabbit:
         left(30)
     #This is a test
 
+    # define maximum canvas constraints
+    low = 0; high = 100
+
+    #defining a random point in the allowed frame
+
+    def randPointInRange():
+        #pick a coordinate in X range
+        ran_number_x = random.uniform(low, high)
+        #pick a coordinate in Y range
+        ran_number_y = random.uniform(low, high)
+    
+        #define point with (x,y) coordinates
+        #could also add a Z variable and coordinate to make 3d
+        point = rs.CreatePoint(ran_number_x,ran_number_y,0)
+        #add point to rhino space
+        point_id = rs.AddPoint(point)
+
+    #randPointInRange()
+
+    #defining a a cluster of points in the allowed frame
+
+    def ptCluster():
+        #user input for number of points
+        input = rs.GetInteger("How many points? ")
+        
+        #for loop to iterate as many times as the user defined
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,0)
+            #add points to rhino space
+            point_cluster = rs.AddPoint(point)
+        
+    #ptCluster()
+
+    #curve from random points
+
+    def crvThroughPoints():
+        #user input for number of points
+        input = rs.GetInteger("How many points? ")
+        
+        #for loop to iterate as many times as the user defined
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,0)
+            #add points to rhino space
+            vertices = rs.AddPoint(point)
+
+        rs.AddPolyline(vertices)
+        
+
+    #crvThroughPoints()
