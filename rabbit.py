@@ -207,5 +207,70 @@ class Rabbit:
 
         rs.AddPolyline(vertices)
         
-
     #crvThroughPoints()
+
+#Create organized XY grid of points, arranged along Z axis
+        #points grid from coordinate list, points 0 to possibly 40 every 5 units
+
+        gridpts = []
+        for i in range(0,100,10):
+            for j in range(0,100,10):
+                #sets height variable to random integer from 0 to 20 
+                height = random.choice(range(20))
+                #generates point on grid layout and at random height
+                gridpts.append(rs.AddPoint(i,j,height))
+
+#allObjs = rs.AllObjects()
+#rs.DeleteObjects(allObjs)
+
+#divide object(shape or curve) add points
+#Script works without being defined as "def DObjpoints():" 
+#so not sure why it won't work now, any toughts?
+def ObjPoints():
+    selectObj = rs.GetObject("Select an existing object")
+    #divide the object into the number of divisions for points
+    ObjDivisions = rs.DivideCurve(selectObj,input("select number of divides:"))
+    #DivideCurve command generates point objects but doesn't assign a GUID
+    #generate a loop to generate GUID's for the points to be used later
+    #create an empty list variable for Objpoints
+    ObjPoints = []
+    #loop through the points and greate a list of GUID's for points
+    for Point in ObjDivisions:
+        ObjPoints.append(rs.AddPoint(Point)
+    #confirm list is GUID
+    print (ObjPoints)
+
+#allObjs = rs.AllObjects()
+#rs.DeleteObjects(allObjs)
+
+#Assign Random color from list
+#uses Subhams color creation function "GetcolorList"
+    def rancolorselect(getColorList,color):
+        rancolorselect = random.choice(range(getColorList))
+#need assignment function
+
+#Assign to layers
+    def CopyObjectsToLayer():
+        "Copy selected objects to a seperate layer"
+        # Get objects to copy
+        objectIds = rs.GetObjects("Select objects")
+        # Get all layer names
+        layerNames = rs.LayerNames()
+        if (objectIds==None or layerNames==None): return
+
+        # Make sure select objects are unselected
+        rs.UnselectObjects( objectIds )
+        
+        layerNames.sort()
+        # Get the destination layer
+        layer = rs.ComboListBox(layerNames, "Destination Layer <" + rs.CurrentLayer() + ">")
+        if layer:
+            # Add the new layer if necessary
+            if( not rs.IsLayer(layer) ): rs.AddLayer(layer)
+            # Copy the objects
+            newObjectIds = rs.CopyObjects(objectIds)
+
+            # Set the layer of the copied objects
+            [rs.ObjectLayer(id, layer) for id in newObjIds]
+            # Select the newly copied objects
+            rs.SelectObjects( newObjIds )
