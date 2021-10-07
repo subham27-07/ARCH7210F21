@@ -2,7 +2,7 @@ import rhinoscriptsyntax as rs
 import math
 import random
 
-#allObjs = rs.AllObjects()
+allObjs = rs.AllObjects()
 #rs.DeleteObjects(allObjs)
 
 class Rabbit:
