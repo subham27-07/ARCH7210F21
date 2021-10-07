@@ -274,4 +274,3 @@ class Rabbit:
                 # Select the newly copied objects
                 rs.SelectObjects( newObjIds )
 
-#Michael test
