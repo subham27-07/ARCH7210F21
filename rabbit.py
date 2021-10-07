@@ -273,3 +273,5 @@ class Rabbit:
                 [rs.ObjectLayer(id, layer) for id in newObjIds]
                 # Select the newly copied objects
                 rs.SelectObjects( newObjIds )
+
+#Michael test
