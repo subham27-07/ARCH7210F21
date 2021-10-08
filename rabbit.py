@@ -6,6 +6,17 @@ import random
 #rs.DeleteObjects(allObjs)
 
 class Rabbit:
+    
+    # define Home position of rabbit
+    rabbit = (0,0,0)
+    # define rabbit speed
+    speed = 1
+    # define 2D angle
+    angle1 = 0
+    # define Thrid dimention angle 
+    angle2 = 0
+    rabbit_id = rs.AddPoint(rabbit)
+    
     # mirror the lines if needed
     def mirror(objects, st_point, ed_point):
         for i in range(0, len(objects)):
@@ -34,7 +45,6 @@ class Rabbit:
 
 
     # Making curves
-
     def curve(Val):
         a = []
         for x in range (Val):
@@ -42,17 +52,6 @@ class Rabbit:
             pt = rs.AddPoint(x,y,0)
             a.append(pt)
             
-            
-            
-    # define Home position of rabbit
-    rabbit = (0,0,0)
-    # define rabbit speed
-    speed = 1
-    # define 2D angle
-    angle1 = 0
-    # define Thrid dimention angle 
-    angle2 = 0
-    rabbit_id = rs.AddPoint(rabbit)
 
     # this defenition moves rabbit forward
     def forward(value):
@@ -83,7 +82,6 @@ class Rabbit:
     # this defenition moves rabbit forward
     def backward(value): 
         # get the variebles that were defined globally
-
         time = 0
         # calculate the time of drawing
         if (isinstance((value / speed), int)):
