@@ -6,47 +6,39 @@ allObjs = rs.AllObjects()
 # rs.DeleteObjects(allObjs)
 
 
-class Rabbit:
-    
+class Drawing:
+
     # define the general variebles
     # define Home position of rabbit
     rabbit = (0, 0, 0)
     # define rabbit speed
     speed = 1
     # define 2D angle
-    angle1 = 0
-    # define Thrid dimention angle
-    angle2 = 0
+    anglexy = 0
+    # define Third dimention angle
+    anglez = 0
+    # define the home point
     rabbit_id = rs.AddPoint(rabbit)
-
+    
+    
     # mirror the lines if needed
-    def mirror(objects, st_point, ed_point):
+    def mirror(self, objects, st_point, ed_point):
         for i in range(0, len(objects)):
             if st_point[i][1] > ed_point[i][1]:
                 rs.MirrorObject(objects[i], [-1000, 0, 0], [1000, 0, 0])
 
     # Changing the of scale if required
-    def changeScale(points, new_scale):
+    def changeScale(self, points, new_scale):
         for i in range(0, len(points)):
             points[i][0] *= new_scale
             points[i][1] *= new_scale
 
         return points
 
-    def getColorList(cls):
-        color = {
-        "red": [255, 0, 0],
-        "blue": [0, 0, 255],
-        "green": [0, 255, 0],
-        "yellow": [255, 185, 15],
-        "white": [248, 248, 255],
-        "coral": [255, 127, 80],
-        "gray": [166, 166, 166],
-        }
-        return color
+
 
     # Making curves
-    def curve(Val):
+    def curve(self,Val):
         a = []
         for x in range(Val):
             y = math.sin(random.random()*x)
@@ -54,94 +46,88 @@ class Rabbit:
             a.append(pt)
 
     # this defenition moves rabbit forward
-    def forward(value):
+    def forward(self,value):
+        '''
+        Real-time drawing in 3D space, toward forward
+        '''
+        time = 0
+        # calculate the time of drawing
+        if (value % self.speed == 0):
+            time = value / self.speed
+        else:
+            time = int((float(value) / self.speed)) + 1
+        Lines = []
+        
+        # define the angles (on degree)
+        self.anglexy = self.anglexy * math.pi / 180
+        self.anglez = self.anglez * math.pi / 180
+        
+        # drawing the line
+        for i in range(time):
+            if i == time-1 and value % self.speed !=0 :
+                subVal = value % self.speed
+            else:
+                subVal = self.speed
+            # save the start point of the line
+            startPt = rs.coerce3dpoint(self.rabbit_id)
+            # Calculate the vector
+            vector = (subVal * math.cos(self.anglexy) * math.cos(self.anglez), (subVal *math.sin(self.anglexy) * math.cos(self.anglez)), (subVal * math.sin(self.anglez)))
+            # move the point to the second position
+            self.rabbit_id = rs.MoveObject(self.rabbit_id, vector)
+            # save the end point of the line
+            endPt = rs.coerce3dpoint(self.rabbit_id)
+            # Draw the line
+            Lines.append(rs.AddLine(startPt, endPt))
+        # Join all of line segments
+        curve = rs.JoinCurves(Lines, True)
+    
+    # this defenition moves rabbit backward
+    def backward(self,value):
+        '''
+        Real-time drawing in 3D space, toward backward
+        '''
         # get the variebles that were defined globally
         time = 0
         # calculate the time of drawing
-        if (isinstance((value / speed), int)):
-            time = value / speed
-        if (isinstance((value / speed), float)):
-            time = int((value / speed)) + 1
+        if (value % self.speed == 0):
+            time = value / self.speed
+        else:
+            time = int((float(value) / self.speed)) + 1
         Lines = []
+        
+        # define the new angle (on degree)
+        self.anglexy = self.anglexy * math.pi / 180
+        self.anglez = self.anglez * math.pi / 180
+        
         # Draw the  line
         for i in range(time):
+            if i == time-1 and value % self.speed !=0 :
+                subVal = value % self.speed
+            else:
+                subVal = self.speed
+                
             # save the start point of the line
-            print(rabbit_id)
-            startPt = rs.coerce3dpoint(rabbit_id)
+            startPt = rs.coerce3dpoint(self.rabbit_id)
             # Calculate the vector
-            vector = ((value * math.cos(angle1) * math.cos(angle2)/time), (value *
-                      math.sin(angle1) * math.cos(angle2)/time), (value * math.sin(angle2)/time))
+            vector = (-subVal * math.cos(self.anglexy) * math.cos(self.anglez), (-subVal *math.sin(self.anglexy) * math.cos(self.anglez)), (-subVal * math.sin(self.anglez)))
             # move the point to the second position
-            rabbit_id = rs.MoveObject(rabbit_id, vector)
+            self.rabbit_id = rs.MoveObject(self.rabbit_id, vector)
             # save the end point of the line
-            endPt = rs.coerce3dpoint(rabbit_id)
+            endPt = rs.coerce3dpoint(self.rabbit_id)
             # Draw the line
             Lines.append(rs.AddLine(startPt, endPt))
         # Join all of line segments
         rs.JoinCurves(Lines, True)
 
-    # this defenition moves rabbit forward
-    def backward(value):
-        # get the variebles that were defined globally
-        time = 0
-        # calculate the time of drawing
-        if (isinstance((value / speed), int)):
-            time = value / speed
-        if (isinstance((value / speed), float)):
-            time = int((value / speed)) + 1
-        Lines = []
-        # Draw the  line
-        for i in range(time):
-            # save the start point of the line
-            startPt = rs.coerce3dpoint(rabbit_id)
-            # Calculate the vector
-            vector = (-(value * math.cos(angle1) * math.cos(angle2)/time), -(value *
-                      math.sin(angle1) * math.cos(angle2)/time), -(value * math.sin(angle2)/time))
-            rabbit_id = rs.MoveObject(rabbit_id, vector)
-            # save the end point of the line
-            endPt = rs.coerce3dpoint(rabbit_id)
-            # save the end point of the line
-            Lines.append(rs.AddLine(startPt, endPt))
-        # Join all of line segments
-        rs.JoinCurves(Lines, True)
-
-    # This definition defines the angle of rotation in a 2D space
-    def right(value):
-        # Get the global varieble
-        global angle1
-        # define the new angle (on degree)
-        angle1 = angle1 + (- value * math.pi / 180)
-
-    # This definition defines the angle of rotation in a 2D space
-    def left(value):
-        # Get the global varieble
-        global angle1
-        # define the new angle (on degree)
-        angle1 = angle1 + (value * math.pi / 180)
-
-    # This definition defines the angle of rotation in a 3D space
-    def up(value):
-        # Get the global varieble
-        global angle2
-        # define the new angle (on degree)
-        angle2 = angle2 + (value * math.pi / 180)
-    # This definition defines the angle of rotation in a 3D space
-
-    def down(value):
-        # Get the global varieble
-        global angle2
-        # define the new angle (on degree)
-        angle2 = angle2 + (- value * math.pi / 180)
-
     # define maximum canvas constraints
     low = 0; high = 100
 
     # defining a random point in the allowed frame
-    def randPointInRange():
+    def randPointInRange(self):
         # pick a coordinate in X range
-        ran_number_x = random.uniform(low, high)
+        ran_number_x = random.uniform(self.low, self.high)
         # pick a coordinate in Y range
-        ran_number_y = random.uniform(low, high)
+        ran_number_y = random.uniform(self.low, self.high)
 
         # define point with (x,y) coordinates
         # could also add a Z variable and coordinate to make 3d
@@ -152,7 +138,7 @@ class Rabbit:
     # randPointInRange()
     
     # defining a a cluster of points in the allowed frame
-    def ptCluster():
+    def ptCluster(self):
         # user input for number of points
         input = rs.GetInteger("How many points? ")
 
@@ -160,9 +146,9 @@ class Rabbit:
         for p in range(input):
 
             # define X coordinate
-            ran_number_x = random.uniform(low, high)
+            ran_number_x = random.uniform(self.low, self.high)
             # define Y coordinate
-            ran_number_y = random.uniform(low, high)
+            ran_number_y = random.uniform(self.low, self.high)
 
             # define point with (x,y) coordinates
             # could also add a Z variable and coordinate to make 3d
@@ -171,9 +157,9 @@ class Rabbit:
             point_cluster = rs.AddPoint(point)
 
     # ptCluster()
-
+    
     # curve from random points
-    def crvThroughPoints():
+    def crvThroughPoints(self):
         # user input for number of points
         input = rs.GetInteger("How many points? ")
 
@@ -181,9 +167,9 @@ class Rabbit:
         for p in range(input):
 
             # define X coordinate
-            ran_number_x = random.uniform(low, high)
+            ran_number_x = random.uniform(self.low, self.high)
             # define Y coordinate
-            ran_number_y = random.uniform(low, high)
+            ran_number_y = random.uniform(self.low, self.high)
             # define point with (x,y) coordinates
             # could also add a Z variable and coordinate to make 3d
             point = rs.CreatePoint(ran_number_x, ran_number_y, 0)
@@ -196,7 +182,7 @@ class Rabbit:
 
     # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
-    def XYZgrid():
+    def XYZgrid(self):
         gridpts = []
         for i in range(0, 100, 10):
             for j in range(0, 100, 10):
@@ -211,7 +197,7 @@ class Rabbit:
     # Script works without being defined as "def Objpoints():"
     # so not sure why it won't work now, any toughts?
     
-    def ObjPoints():
+    def ObjPoints(self):
         selectObj = rs.GetObject("Select an existing object")
         # divide the object into the number of divisions for points
         ObjDivisions = rs.DivideCurve(
@@ -222,7 +208,7 @@ class Rabbit:
         ObjPoints = []
         # loop through the points and greate a list of GUID's for points
         for Point in ObjDivisions:
-            ObjPoints.append(rs.AddPoint(Point)
+            ObjPoints.append(rs.AddPoint(Point))
         print(ObjPoints)
     # allObjs = rs.AllObjects()
     # rs.DeleteObjects(allObjs)
@@ -235,7 +221,7 @@ class Rabbit:
 
 
     # Assign to layers
-    def CopyObjectsToLayer():
+    def CopyObjectsToLayer(self):
         '''
         Copy selected objects to a seperate layer
         '''
@@ -262,3 +248,17 @@ class Rabbit:
             [rs.ObjectLayer(id, layer) for id in newObjIds]
             # Select the newly copied objects
             rs.SelectObjects(newObjIds)
+
+class visualization:
+    
+    def getColorList(self,cls):
+        color = {
+        "red": [255, 0, 0],
+        "blue": [0, 0, 255],
+        "green": [0, 255, 0],
+        "yellow": [255, 185, 15],
+        "white": [248, 248, 255],
+        "coral": [255, 127, 80],
+        "gray": [166, 166, 166],
+        }
+        return color
