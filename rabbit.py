@@ -1,6 +1,7 @@
 import rhinoscriptsyntax as rs
 import math
 import random
+import Rhino
 
 allObjs = rs.AllObjects()
 # rs.DeleteObjects(allObjs)
@@ -38,6 +39,7 @@ class Drawing:
 
 
     # Making curves
+    ### this ones just create the points you might want to crete curves too
     def curve(self,Val):
         a = []
         for x in range(Val):
@@ -119,6 +121,13 @@ class Drawing:
         # Join all of line segments
         rs.JoinCurves(Lines, True)
 
+
+    # this function creates irregular 3D shapes
+    # def irregShape(self, points):
+    #     for pt in points:
+    #         side = random.
+    
+    
     # define maximum canvas constraints
     low = 0; high = 100
 
@@ -141,6 +150,7 @@ class Drawing:
     def ptCluster(self):
         # user input for number of points
         input = rs.GetInteger("How many points? ")
+        point_cluster = []
 
         # for loop to iterate as many times as the user defined
         for p in range(input):
@@ -152,12 +162,15 @@ class Drawing:
 
             # define point with (x,y) coordinates
             # could also add a Z variable and coordinate to make 3d
-            point = rs.CreatePoint(ran_number_x, ran_number_y, 0)
+            point = (ran_number_x, ran_number_y, 0)
             # add points to rhino space
-            point_cluster = rs.AddPoint(point)
+            point_cluster.append(rs.AddPoint(point))
+        return point_cluster
 
     # ptCluster()
     
+    # this can be merged with the function of curve (repetetive in some parts)
+    # Is this working correctly? I couldn't run it!
     # curve from random points
     def crvThroughPoints(self):
         # user input for number of points
@@ -262,3 +275,18 @@ class visualization:
         "gray": [166, 166, 166],
         }
         return color
+    
+    def lineWeight(self, printWidth, color):
+        '''
+        Change the layer of item and its printed width
+        '''
+        # assign the width to the layers name
+        layerName = printWidth
+        # create a new layer
+        rs.AddLayer(str(layerName), color = None)
+        # change the printed width of new layer
+        rs.LayerPrintWidth(str(layerName), printWidth)
+        # make created layer current
+        rs.CurrentLayer(str(layerName))
+        
+    
