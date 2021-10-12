@@ -325,6 +325,14 @@ class Drawing:
                 
     # define maximum canvas constraints
     low = 0; high = 100
+    # define range for curves to be created in 
+    # "first" is lowest curve
+    # "second" is middle curve
+    # "third" is top curve
+    lowFirst = 0; highFirst = 20
+    lowSecond = 34; highSecond = 66
+    lowThird = 80; highThird = 100
+
 
     # defining a random point in the allowed frame
     def randPointInRange(self):
@@ -363,30 +371,274 @@ class Drawing:
         return point_cluster
 
     # ptCluster()
+
+
+    #defines multiple points and runs a curve throught them
+    def crvThroughPoints():
     
-    # this can be merged with the function of curve (repetetive in some parts)
-    # Is this working correctly? I couldn't run it!
-    # curve from random points
-    def crvThroughPoints(self):
-        # user input for number of points
+    
+    
+        #user input for number of points
         input = rs.GetInteger("How many points? ")
-
-        # for loop to iterate as many times as the user defined
+    
+        vertices = []
+    
+        #for loop to iterate as many times as the user defined
         for p in range(input):
+        
+         #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+          #define point with (x,y) coordinates
+          #could also add a Z variable and coordinate to make 3d
+          point = rs.CreatePoint(ran_number_x,ran_number_y,0)
+          #add points to rhino space
+          vertices.append(rs.AddPoint(point)) 
 
-            # define X coordinate
-            ran_number_x = random.uniform(self.low, self.high)
-            # define Y coordinate
-            ran_number_y = random.uniform(self.low, self.high)
-            # define point with (x,y) coordinates
-            # could also add a Z variable and coordinate to make 3d
-            point = rs.CreatePoint(ran_number_x, ran_number_y, 0)
-            # add points to rhino space
-            vertices = rs.AddPoint(point)
 
-        rs.AddPolyline(vertices)
+        rs.AddCurve(vertices,3)
 
-    # crvThroughPoints()
+    #crvThroughPoints()
+
+    
+    #draws multiple random curves in 2d using crvThroughPoints function
+    def multcurves():
+    
+    #input to define number of times to run the for loop
+        input = rs.GetInteger("How many curves would you like? ")
+        
+        for i in range(input):
+            crvThroughPoints()
+
+    #multcurves()
+
+
+    #draws random 3d curve
+    def crvThroughPoints3d():
+        #user input for number of points
+        input = rs.GetInteger("How many points? ")
+        
+        vertices = []
+        
+        #for loop to iterate as many times as the user defined
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(low, high)
+            
+            #define point with (x,y) coordinates
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices.append(rs.AddPoint(point)) 
+
+
+        rs.AddCurve(vertices,3)
+        
+        
+    #crvThroughPoints3d()
+
+
+    #draws 3 curves in 3d space... one in lower range, one in mid-range, and one in upper range
+    #ranges are determined by global variables "low/high first/second/third" 
+    def crvThroughRangedPoints3d():
+        #user input for number of points per curve
+        input = rs.GetInteger("How many points? ")
+        
+        #setting up variables to be referenced when drawing lines through appended points
+        #vertices1 is for curve #1
+        #vertices2 is for curve #2
+        #vertices3 is for curve #3
+        vertices1 = []
+        vertices2 = []
+        vertices3 = []
+        
+        #for loop to create first curve in lower range
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowFirst, highFirst)
+            
+            #define point with (x,y) coordinates
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices1.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        rs.AddCurve(vertices1,3)
+        
+        #for loop to create first curve in middle range
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowSecond, highSecond)
+            
+            #define point with (x,y) coordinates
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices2.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        rs.AddCurve(vertices2,3)
+        
+        #for loop to create first curve in upper range
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowThird, highThird)
+            
+            #define point with (x,y) coordinates
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices3.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        rs.AddCurve(vertices3,3)
+        
+    #crvThroughRangedPoints3d()
+
+
+    #draws 2 curves in 3d space and lofts between them... one curve in upper range and one in lower range
+    def loftFrom2():
+        #user input for number of points
+        input = rs.GetInteger("How many points per curve? ")
+        
+        vertices1 = []
+        
+        vertices3 = []
+        
+        #for loop to iterate as many times as the user defined
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowFirst, highFirst)
+            
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices1.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        curve1 = rs.AddCurve(vertices1,3)
+        
+        
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowThird, highThird)
+            
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices3.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        curve3 = rs.AddCurve(vertices3,3)
+        
+        #loft between defined curves
+        rs.AddLoftSrf([curve1,curve3])
+        
+    #loftFrom2()
+
+
+    #draws 3 curves in 3d space and lofts between them... one curve in upper range, one in mid-range, and one in lower range
+    def loftFrom3():
+        #user input for number of points
+        input = rs.GetInteger("How many points? ")
+        
+        vertices1 = []
+        vertices2 = []
+        vertices3 = []
+        
+        #for loop to iterate as many times as the user defined
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowFirst, highFirst)
+            
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices1.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        curve1 = rs.AddCurve(vertices1,3)
+        
+        
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowSecond, highSecond)
+            
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices2.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        curve2 = rs.AddCurve(vertices2,3)
+        
+        
+        for p in range(input):
+            
+            #define X coordinate
+            ran_number_x = random.uniform(low, high)
+            #define Y coordinate
+            ran_number_y = random.uniform(low, high)
+            #define Z coordinate
+            ran_number_z = random.uniform(lowThird, highThird)
+            
+            #define point with (x,y) coordinates
+            #could also add a Z variable and coordinate to make 3d
+            point = rs.CreatePoint(ran_number_x,ran_number_y,ran_number_z)
+            #add points to rhino space
+            vertices3.append(rs.AddPoint(point)) 
+
+        #add curve through points in stored variable
+        curve3 = rs.AddCurve(vertices3,3)
+        
+        #loft between defined curves
+        rs.AddLoftSrf([curve1,curve2,curve3])
+        
+    #loftFrom3()
+    
+    
 
     # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
