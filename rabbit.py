@@ -23,18 +23,147 @@ class Drawing:
     
     
     # mirror the lines if needed
-    def mirror(self, objects, st_point, ed_point):
-        for i in range(0, len(objects)):
-            if st_point[i][1] > ed_point[i][1]:
-                rs.MirrorObject(objects[i], [-1000, 0, 0], [1000, 0, 0])
+        #def mirror(self, objects, st_point, ed_point):
+            #for i in range(0, len(objects)):
+                #if st_point[i][1] > ed_point[i][1]:
+                   # rs.MirrorObject(objects[i], [-1000, 0, 0], [1000, 0, 0])
 
-    # Changing the of scale if required
-    def changeScale(self, points, new_scale):
-        for i in range(0, len(points)):
-            points[i][0] *= new_scale
-            points[i][1] *= new_scale
+        # Changing the of scale if required
+            #def changeScale(self, points, new_scale):
+                #for i in range(0, len(points)):
+                    #points[i][0] *= new_scale
+                    #points[i][1] *= new_scale
 
-        return points
+               # return points
+        
+    # mirror the lines if needed 
+    def Main():
+
+        curve = rs.GetObject("please select a curve",rs.filter.curve)
+
+        line  = rs.GetObject("Select a mirror line")
+
+        pt    = rs.GetObject("please select a point", rs.filter.point)
+
+        limitscale = rs.GetReal("please input a limit scale factor", 0.3)
+
+        angle      = rs.GetReal("please input a rotate angle", 10)
+
+        len        = rs.CurveLength(curve)
+
+        list       = []
+
+        lenlimit=limitscale*len
+
+        while (len>lenlimit):
+
+            if len<=lenlimit: break
+
+            curve = rs.ScaleObject(curve,pt,[0.9,0.9,0.9], True)
+
+            curve = rs.RotateObject(curve,pt,angle)
+
+            len   = rs.CurveLength(curve)
+
+            list.append(curve)
+
+            view = rs.CurrentView()
+
+            rs.ViewCPlane( view, rs.WorldZXPlane() )
+
+            Mirror1(line, list)
+
+
+
+
+
+    def Mirror1(line, list):
+
+        objs = list
+
+        for i in range(12):
+
+            line1   = rs.RotateObject(line, rs.CurveEndPoint(line), 15, None, copy=False)
+
+            Mirror1 = rs.MirrorObjects( objs, rs.CurveStartPoint(line), rs.CurveEndPoint(line), True )
+
+            list1 = []
+
+            #rs.ScaleObjects(line1, rs.CurveEndPoint(line), [scale, scale, scale], True)
+
+            list1.append(Mirror1)
+
+            line = line1
+
+            #rs.RotateObject( line1, rs.CurveStartPoint(line1), 30, None, True)
+
+            view = rs.CurrentView()
+
+            rs.ViewCPlane( view, rs.WorldYZPlane() )
+
+            rs.HideObjects(line)
+
+            Mirror2(line1, list1)
+
+
+
+
+
+    def Mirror2(line1, list1):
+
+        objs = list1
+
+        for i in range(12):
+
+            line2 = rs.RotateObject(line1, rs.CurveEndPoint(line1), 15, None, copy=False)
+
+            Mirror2 = rs.MirrorObjects( line1, rs.CurveStartPoint(line1), rs.CurveEndPoint(line1), True )
+
+            list2 = []
+
+            list2.append(Mirror2)
+
+            line1 = line2
+
+
+
+            Mirror3(line2, list2, line1)
+
+
+
+    def Mirror3(line2, list2, line1):
+
+        objs = list2
+
+        for i in range(15):
+
+            line3 = rs.RotateObject(line2, rs.CurveEndPoint(line2), 15, None, copy=False)
+
+            Mirror3 = rs.MirrorObjects( line2, rs.CurveStartPoint(line2), rs.CurveEndPoint(line2), True )
+
+            list3 = []
+
+            list3.append(Mirror3)
+
+            line2 = line3
+
+            view = rs.CurrentView()
+
+            rs.ViewCPlane( view, rs.WorldZXPlane() )
+
+            RotateMirrors(line1, line2, line3)
+
+
+
+    def RotateMirrors(line1, line2, line3):
+
+        rs.RotateObjects( [line1, line2, line3], rs.CurveStartPoint(line3), 30, None, True)
+
+        view = rs.CurrentView()
+
+        rs.ViewCPlane( view, rs.WorldYZPlane() )   
+        
+    # mirror the lines ends here
 
 
 
