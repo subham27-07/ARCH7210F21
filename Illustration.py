@@ -38,3 +38,46 @@ for i in range(500):
     points.append(point)
 rs.AddCurve(points)
 rs.AddPolyline(points)
+
+
+#Test illustration_2, will need to modify function
+
+def Main():
+
+    curve = rs.GetObject("please select a curve",rs.filter.curve)
+
+    line  = rs.GetObject("Select a mirror line")
+
+    pt    = rs.GetObject("please select a point", rs.filter.point)
+
+    limitscale = rs.GetReal("please input a limit scale factor", 0.3)
+
+    angle      = rs.GetReal("please input a rotate angle", 10)
+
+    len        = rs.CurveLength(curve)
+
+    list       = []
+
+    lenlimit=limitscale*len
+
+    while (len>lenlimit):
+
+        if len<=lenlimit: break
+
+        curve = rs.ScaleObject(curve,pt,[0.9,0.9,0.9], True)
+
+        curve = rs.RotateObject(curve,pt,angle)
+
+        len   = rs.CurveLength(curve)
+
+        list.append(curve)
+
+        view = rs.CurrentView()
+
+        rs.ViewCPlane( view, rs.WorldZXPlane() )
+
+        Mirror1(line, list)
+Main()
+
+
+
