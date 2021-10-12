@@ -19,3 +19,22 @@ r=rabbit
 
 points = r.Drawing().ptCluster()
 r.Drawing().irregShape(points)
+
+
+#Test illustration, will need to modify function
+
+import rabbit
+import random
+
+location = [0,0,0]
+points=[]
+
+for i in range(500):
+    x=random.uniform(-1,1)
+    y=random.uniform(-1,1)
+    z=random.uniform(-1,1)
+    point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z)
+    location=(location[0]+x,location[1]+y,location[2]+z)
+    points.append(point)
+rs.AddCurve(points)
+rs.AddPolyline(points)
