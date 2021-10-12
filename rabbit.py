@@ -123,11 +123,77 @@ class Drawing:
 
 
     # this function creates irregular 3D shapes
-    # def irregShape(self, points):
-    #     for pt in points:
-    #         side = random.
-    
-    
+    def irregShape(self, points):
+        for point in points:
+            pt = rs.coerce3dpoint(point)
+            # randomely choose how many sides have each shape
+            side = random.randrange(7,15)
+            # random side size between range(5,20)
+            sideSize = random.randrange(5,20)
+            # get the corner points 
+            pt1 = (pt[0] + sideSize/2, pt[1] + sideSize/2, pt[2] + sideSize/2)
+            pt2 = (pt[0] - sideSize/2, pt[1] + sideSize/2, pt[2] + sideSize/2)
+            pt3 = (pt[0] + sideSize/2, pt[1] - sideSize/2, pt[2] + sideSize/2)
+            pt4 = (pt[0] - sideSize/2, pt[1] - sideSize/2, pt[2] + sideSize/2)
+            pt5 = (pt[0] + sideSize/2, pt[1] + sideSize/2, pt[2] - sideSize/2)
+            pt6 = (pt[0] - sideSize/2, pt[1] + sideSize/2, pt[2] - sideSize/2)
+            pt7 = (pt[0] + sideSize/2, pt[1] - sideSize/2, pt[2] - sideSize/2)
+            pt8 = (pt[0] - sideSize/2, pt[1] - sideSize/2, pt[2] - sideSize/2)
+            pts = [pt1,pt3,pt4,pt2,pt5,pt7,pt8,pt6]
+            # creat the box
+            box = rs.AddBox(pts)
+            
+            breps = []
+            for i in range(side-6):
+                # get one of the edges to cut from randomely
+                centerPt = random.choice(pts)
+                # delete the point from list to not being choosen next time
+                pts.remove(centerPt)
+                # calcualte the vector from the center of the box to the edge
+                vector = rs.VectorCreate(centerPt,pt)
+                # draw the plan with the calculted vector as normal
+                cutPlane = rs.PlaneFromNormal(centerPt,vector)
+                # create a circle 
+                cutCirc = rs.AddCircle(cutPlane,40)
+                # get the line from box center to edge
+                curve0 = rs.AddLine(centerPt,pt)
+                # get the curve domain
+                domain = rs.CurveDomain(curve0)
+                # get a point on curve
+                midpt = rs.EvaluateCurve(curve0, (domain[0] + (domain[1]/8) + (random.random()*((domain[1]/2)-domain[0]))))
+                # draw the extrusion curve
+                curve = rs.AddLine(centerPt,midpt)
+                # creat a surface
+                cutSrf = rs.AddPlanarSrf(cutCirc)
+                # extrude surface randomely
+                boxCut = rs.ExtrudeSurface(cutSrf,curve)
+                originBox = box
+                # split the main box to get the new shape
+                cube = rs.BooleanDifference(originBox,boxCut)
+                # delete all of objects except the main brep
+                rs.DeleteObject(cutCirc)
+                rs.DeleteObject(curve0)
+                rs.DeleteObject(curve)
+                rs.DeleteObject(cutSrf)
+                rs.DeleteObject(boxCut) 
+                if cube:
+                    box = cube[0]
+                else: 
+                    break
+            # delete the center points
+            rs.DeleteObjects(rs.AddPoint(pt))
+                
+
+
+                
+                
+                
+
+                
+                
+                
+                
+                
     # define maximum canvas constraints
     low = 0; high = 100
 
@@ -162,7 +228,7 @@ class Drawing:
 
             # define point with (x,y) coordinates
             # could also add a Z variable and coordinate to make 3d
-            point = (ran_number_x, ran_number_y, 0)
+            point = rs.CreatePoint(ran_number_x, ran_number_y, 0)
             # add points to rhino space
             point_cluster.append(rs.AddPoint(point))
         return point_cluster
