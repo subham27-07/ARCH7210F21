@@ -75,6 +75,12 @@ def myFunc():
         view = rs.CurrentView()
 
         rs.ViewCPlane( view, rs.WorldZXPlane() )
+	
+	colors = [(193, 0, 0),(5, 46, 192),(146, 75, 96)]
+	
+        color = random.choice(colors)
+
+        rs.ObjectColor (curve, color=color)
 
         Mirror1(line, list)
 
