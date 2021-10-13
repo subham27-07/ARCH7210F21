@@ -81,4 +81,41 @@ def myFunc():
 
 myFunc()
 
+####################### Random 3D ####################
+####################### Random 3D ####################
+####################### Random 3D ####################
 
+def myFunc():
+
+	intLength = rs.GetInteger("how many in x",30)
+
+	intWidth  = rs.GetInteger("how many in y",30)
+
+	intGen	  = rs.GetInteger("how many generations",50)
+
+	strStack  = rs.GetString ("should I stack the generations", "yes", ["yes", "no"])
+
+	arrValues = randomizeArray01(intLength,intWidth)
+
+	arrMeshes = render(arrValues,-1, strStack)
+
+	for i in range(intGen):
+
+		arrValues = applyGOL(arrValues)
+
+		if strStack == "no" :
+
+			update(arrMeshes, arrValues)
+
+		else :
+
+			render(arrValues,i, strStack) 
+
+	
+
+myFunc()
+
+
+####################### Random 3D ####################
+####################### Random 3D ####################
+####################### Random 3D ####################
