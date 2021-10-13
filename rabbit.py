@@ -820,14 +820,14 @@ class Drawing:
     #loftFrom3()
     
 
-    # Create organized XY grid of points, arranged along Z axis
+    # Create organized XY grid of points, arranged randomly along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
     def XYZgrid(self):
         gridpts = []
         for i in range(0, 100, 10):
             for j in range(0, 100, 10):
-                # sets height variable to random integer from 0 to 20
-                height = random.choice(range(20))
+                # sets height variable to random integer from 0 to 100
+                height = random.choice(range(100))
                 # generates point on grid layout and at random height
                 gridpts.append(rs.AddPoint(i, j, height))
 
