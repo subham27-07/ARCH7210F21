@@ -638,7 +638,6 @@ class Drawing:
         
     #loftFrom3()
     
-    
 
     # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
@@ -671,35 +670,6 @@ class Drawing:
             ObjPoints.append(rs.AddPoint(Point))
         print(ObjPoints)
  
-
-    # Assign to layers
-    def CopyObjectsToLayer(self):
-        '''
-        Copy selected objects to a seperate layer
-        '''
-        # Get objects to copy
-        objectIds=rs.GetObjects("Select objects")
-        # Get all layer names
-        layerNames=rs.LayerNames()
-        if (objectIds == None or layerNames == None): return
-
-        # Make sure select objects are unselected
-        rs.UnselectObjects(objectIds)
-
-        layerNames.sort()
-        # Get the destination layer
-        layer=rs.ComboListBox(
-            layerNames, "Destination Layer <" + rs.CurrentLayer() + ">")
-        if layer:
-            # Add the new layer if necessary
-            if(not rs.IsLayer(layer)): rs.AddLayer(layer)
-            # Copy the objects
-            newObjectIds=rs.CopyObjects(objectIds)
-
-            # Set the layer of the copied objects
-            [rs.ObjectLayer(id, layer) for id in newObjIds]
-            # Select the newly copied objects
-            rs.SelectObjects(newObjIds)
 
 class visualization:
     
@@ -740,3 +710,33 @@ class visualization:
              for name in layerNames: rs.LayerColor(name, ranColorSelect())
         
     
+class organization:
+
+     # Assign to layers
+    def CopyObjectsToLayer(self):
+        '''
+        Copy selected objects to a seperate layer
+        '''
+        # Get objects to copy
+        objectIds=rs.GetObjects("Select objects")
+        # Get all layer names
+        layerNames=rs.LayerNames()
+        if (objectIds == None or layerNames == None): return
+
+        # Make sure select objects are unselected
+        rs.UnselectObjects(objectIds)
+
+        layerNames.sort()
+        # Get the destination layer
+        layer=rs.ComboListBox(
+            layerNames, "Destination Layer <" + rs.CurrentLayer() + ">")
+        if layer:
+            # Add the new layer if necessary
+            if(not rs.IsLayer(layer)): rs.AddLayer(layer)
+            # Copy the objects
+            newObjectIds=rs.CopyObjects(objectIds)
+
+            # Set the layer of the copied objects
+            [rs.ObjectLayer(id, layer) for id in newObjIds]
+            # Select the newly copied objects
+            rs.SelectObjects(newObjIds)
