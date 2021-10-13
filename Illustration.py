@@ -42,7 +42,7 @@ rs.AddPolyline(points)
 
 #Test illustration_2, will need to modify function
 
-def Main():
+def myFunc():
 
     curve = rs.GetObject("please select a curve",rs.filter.curve)
 
@@ -77,7 +77,8 @@ def Main():
         rs.ViewCPlane( view, rs.WorldZXPlane() )
 
         Mirror1(line, list)
-Main()
 
+
+myFunc()
 
 
