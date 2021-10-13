@@ -22,61 +22,10 @@ class Drawing:
     rabbit_id = rs.AddPoint(rabbit)
     
     
-    # mirror the lines if needed
-        #def mirror(self, objects, st_point, ed_point):
-            #for i in range(0, len(objects)):
-                #if st_point[i][1] > ed_point[i][1]:
-                   # rs.MirrorObject(objects[i], [-1000, 0, 0], [1000, 0, 0])
 
-        # Changing the of scale if required
-            #def changeScale(self, points, new_scale):
-                #for i in range(0, len(points)):
-                    #points[i][0] *= new_scale
-                    #points[i][1] *= new_scale
 
-               # return points
-        
     # mirror the lines if needed 
-    def Main():
-
-        curve = rs.GetObject("please select a curve",rs.filter.curve)
-
-        line  = rs.GetObject("Select a mirror line")
-
-        pt    = rs.GetObject("please select a point", rs.filter.point)
-
-        limitscale = rs.GetReal("please input a limit scale factor", 0.3)
-
-        angle      = rs.GetReal("please input a rotate angle", 10)
-
-        len        = rs.CurveLength(curve)
-
-        list       = []
-
-        lenlimit=limitscale*len
-
-        while (len>lenlimit):
-
-            if len<=lenlimit: break
-
-            curve = rs.ScaleObject(curve,pt,[0.9,0.9,0.9], True)
-
-            curve = rs.RotateObject(curve,pt,angle)
-
-            len   = rs.CurveLength(curve)
-
-            list.append(curve)
-
-            view = rs.CurrentView()
-
-            rs.ViewCPlane( view, rs.WorldZXPlane() )
-
-            Mirror1(line, list)
-
-
-
-
-
+    
     def Mirror1(line, list):
 
         objs = list
