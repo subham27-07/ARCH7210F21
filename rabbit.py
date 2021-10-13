@@ -670,15 +670,7 @@ class Drawing:
         for Point in ObjDivisions:
             ObjPoints.append(rs.AddPoint(Point))
         print(ObjPoints)
-    # allObjs = rs.AllObjects()
-    # rs.DeleteObjects(allObjs)
-
-    # Assign Random color from list
-    # uses Subhams color creation function "GetcolorList"
-        def rancolorselect(getColorList, color):
-            rancolorselect=random.choice(range(getColorList))
-    # need assignment function
-
+ 
 
     # Assign to layers
     def CopyObjectsToLayer(self):
@@ -735,5 +727,16 @@ class visualization:
         rs.LayerPrintWidth(str(layerName), printWidth)
         # make created layer current
         rs.CurrentLayer(str(layerName))
+        # Assign Random color from list
+        
+    # uses Subhams color creation function "GetcolorList"
+    def ranColorSelect(self, getColorList, color):
+            ranColorSelect = random.choice(range(getColorList))
+            
+    # Color by layer, colors layer and all objects in layer
+    def colorLayer(self, layerNames, ranColorSelect):
+        layerNames = rs.LayerNames()
+        if layerNames:
+             for name in layerNames: rs.LayerColor(name, ranColorSelect())
         
     
