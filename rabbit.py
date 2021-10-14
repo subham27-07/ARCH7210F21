@@ -820,15 +820,16 @@ class Drawing:
     #loftFrom3()
     
 
-    # Create organized XY grid of points, arranged randomly along Z axis
+    # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
     def XYZgrid(self):
+        '''takes nothing returns points on xyz grid'''
         gridpts = []
         for i in range(0, 100, 10):
             for j in range(0, 100, 10):
                 # sets height variable to random integer from 0 to 100
                 height = random.choice(range(100))
-                # generates point on grid layout and at random height
+                # generates point on xy grid layout and z at random heights
                 gridpts.append(rs.AddPoint(i, j, height))
 
     # allObjs = rs.AllObjects()
@@ -838,6 +839,7 @@ class Drawing:
     # so not sure why it won't work now, any toughts?
     
     def ObjPoints(self):
+        '''takes user selected curve and returns divided curve and points along'''
         selectObj = rs.GetObject("Select an existing object")
         # divide the object into the number of divisions for points
         ObjDivisions = rs.DivideCurve(
@@ -850,6 +852,8 @@ class Drawing:
         for Point in ObjDivisions:
             ObjPoints.append(rs.AddPoint(Point))
         print(ObjPoints)
+    # allObjs = rs.AllObjects()
+    # rs.DeleteObjects(allObjs)
  
 
 class visualization:
