@@ -969,7 +969,7 @@ class visualization:
 
     def assignObjColor(self, color):
         '''assigns select object a color'''
-	self.rancolorselect = color
+	self.ranColorSelect = color
         rs.ObjectColor(rs.GetObjects("select existing obj:"), color)
 	#select object color via random color select    
     
