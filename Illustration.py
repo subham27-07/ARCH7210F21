@@ -1,5 +1,6 @@
 import rabbit
 import random
+import rhinoscriptsyntax as rs
 
 r=rabbit
 
@@ -22,10 +23,6 @@ r.Drawing().irregShape(points)
 
 
 #Test illustration, will need to modify function
-
-import rabbit
-import random
-
 location = [0,0,0]
 points=[]
 
