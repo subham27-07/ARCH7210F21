@@ -27,6 +27,7 @@ class Drawing:
     # mirror the lines if needed 
     
     def Mirror1(self,line, list):
+	'''This function takes the line and mirrors it and appends it to list '''
         objs = list
         for i in range(12):
             line1   = rs.RotateObject(line, rs.CurveEndPoint(line), 15, None, copy=False)
@@ -43,6 +44,7 @@ class Drawing:
 
 
     def Mirror2(self,line1, list1):
+	'''This function first line and appends it to 2nd list of line and creates mirror'''
         objs = list1
         for i in range(12):
             line2 = rs.RotateObject(line1, rs.CurveEndPoint(line1), 15, None, copy=False)
@@ -54,6 +56,7 @@ class Drawing:
 
 
     def Mirror3(self,line2, list2, line1):
+	'''This function first line and appends it to 3nd list of line and creates mirror'''
         objs = list2
         for i in range(15):
             line3 = rs.RotateObject(line2, rs.CurveEndPoint(line2), 15, None, copy=False)
