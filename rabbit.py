@@ -662,24 +662,103 @@ class Drawing:
     #loftFrom3()
     
 
-    # Create organized XY grid of points, arranged randomly along Z axis
+    # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
     def XYZgrid(self):
+        '''takes nothing returns points on xyz grid'''
         gridpts = []
         for i in range(0, 100, 10):
             for j in range(0, 100, 10):
                 # sets height variable to random integer from 0 to 100
                 height = random.choice(range(100))
-                # generates point on grid layout and at random height
+                # generates point on xy grid layout and z at random heights
                 gridpts.append(rs.AddPoint(i, j, height))
 
     # allObjs = rs.AllObjects()
     # rs.DeleteObjects(allObjs)
-    # divide object(shape or curve) add points
-    # Script works without being defined as "def Objpoints():"
-    # so not sure why it won't work now, any toughts?
+
+
+    def threeHeightCurves(self):
+     '''takes 3 selected returns grid of 3 heigh veriation curves'''
+    #Has user select 3 points from rhino model or create and select
+    pointA = rs.GetObject("Select point A")
+    pointB = rs.GetObject("Select point B")
+    pointC = rs.GetObject("Select point C")
+    
+    pointList = []
+    #empty point list   
+    axis = []  
+    #empty axis list
+    for i in range(100):
+    #create list of points and store in a 2-dimesional list
+        points = []
+        for j in range(100):
+            points.append(rs.AddPoint(i,j,0))
+        pointList.append(points)
+        #creates grid of points an adds to 2d list
+        
+    # draw vertical lines of different length based on proximity to the 3 points. 
+    for i in range(len(pointList)):
+    #len returns the list length
+    #conditional loop, compares point location in grid to one point at a time
+        for j in range(len(pointList[i])):
+            disA = rs.Distance(pointList[i][j],pointA)
+            disB = rs.Distance(pointList[i][j],pointB)
+            disC = rs.Distance(pointList[i][j],pointC)
+            coords = rs.PointCoordinates(pointList[i][j])
+            #sets up parameters for if else statement, grid point cordinates from list, and 3 input points
+            if disA < disB and disA<disC:
+                axis.append(rs.AddLine(pointList[i][j],(coords[0],coords[1],35)))
+                #if grid point CLOSEST to pointA, add line height 35
+            elif disB<disA and disB < disC:
+                axis.append(rs.AddLine( pointList[i][j],(coords[0],coords[1],40)))
+                #if grid point CLOSEST to pointB, add line height 40
+            else:
+                axis.append(rs.AddLine(pointList[i][j] ,(coords[0],coords[1],65)))
+                #if grid point CLOSEST to pointC, add line height 65
+                
+
+    def SpheresonPts(self):
+        '''takes any collection of points objects or xyz grid function points, returns 3d obect sphere to each'''
+        spheres = []
+        #add spheres to the gridpts with radius 
+        for i in self.gridpts:
+            radius = random.choice((0.5,1,1.5,2))
+            #in this case if point from gridpts from XYZgrid function, then sphere radious random from list of 4
+            #may add perimeter after def, ("name of points host" = gridpts)
+            spheres.append(rs.AddSphere(i,radius))
+            #spheres organized, made of point and radius 
+
+
+    def lineform(self):
+        '''takes numerical input 3 times, returns lines in form of projected grid and randomized perimeters'''
+        List=[]
+        #empty list for points
+        for i in range(input("input number 3 to 20 for loop iteration of 3d line form:"),50):
+            #input gives number for x line layer iteration number start of lines in each, end of range 50
+            for j in range(6,30):
+                #nested for loop form within form perimeter 6 to 30 for x
+                b=random.randint(2,i)
+                t=(i,j,0)
+                a=(j,i,i)
+                #output of i,j in for loops create perimeters for addline
+                List.append(t)
+                #appends list xy coordinate place
+                rs.AddLine(a,t)
+                #takes appended coordinates sets as y, takes y from a as x to add line o points
+
+    def xyGrid(self, xNum, yNum):
+        '''returns request for input to prints 2d grid'''
+        for i in range(xNum):
+            for j in range(yNum):
+                #sets up for loop, perimeter set up grid x and y
+                rs.AddPoint(i, j, 0)
+                #point added coordinates x and y no z
+    print xyGrid( input("grid x number:"), input("grid y number:"))
+    #for, x and y produced as input x and y organize grid of points 2d
     
     def ObjPoints(self):
+        '''takes user selected curve and returns divided curve and points along'''
         selectObj = rs.GetObject("Select an existing object")
         # divide the object into the number of divisions for points
         ObjDivisions = rs.DivideCurve(
@@ -692,7 +771,83 @@ class Drawing:
         for Point in ObjDivisions:
             ObjPoints.append(rs.AddPoint(Point))
         print(ObjPoints)
+    # allObjs = rs.AllObjects()
+    # rs.DeleteObjects(allObjs)
  
+
+    def urchinLines(self):
+        '''takes color, count, point, math.pi to return concentric line object'''
+        color2 = self.rancolorselect
+        color1 = self.rancolorselect 
+        #defining 2 colors from rancolorselect function pulling grom getcolorlist in rabbit library
+        #can also input list [x,y,z] of numbers ranging 0-255
+        count = 0
+        step=0
+        point = []
+        c=pow(2,0.5) #defining root of 2 
+        p=math.pi #defining pi value for curves
+        
+        while count <300: #making interior lines using math
+            x = math.cos(random.uniform(-55,55))
+            y = math.sin(random.uniform(-55,55))
+            z = random.uniform(0,0)
+            x1 = random.uniform(-55,55)
+            y1 = random.uniform(-55,55)
+            z1 = random.uniform(0,0)
+            point = (x,y,z)
+            #define perimeter first point as 3 coordinate
+            point1 = (x1,y1,z1)
+            #define perimeter 2nd  point as 3 coordinate
+            point2 = (point, point1,(0,0,0))
+            #point consist of 2 points as x and y and no z
+            
+            if rs.Distance(point1,(0,0,0)) > 20 and rs.Distance(point1,(0,0,0)) < 22:
+        #condition of curves,distance from center
+                a = rs.AddCurve(point2)
+                if count>50:
+                    rs.ObjectColor(a, color2) #color based on condition greater than 50
+                else:
+                    rs.ObjectColor(a, color1) #color based on condition less than 50
+                count = count + 1
+        
+        while count < 200: #draw interior lines while color loop iter
+            x = math,cos(random.uniform(-55,55))
+            y = math.sin(random.uniform(-55,55))
+            z = random.uniform(0,0)
+            x1 = random.uniform(-55,55)
+            y1 = random.uniform(-55,55)
+            z1 = random.uniform(0,0)
+            point = (x,y,z)
+            point1= (x1,y1,z1)
+            point2 = (point, point1,(0,0,0))
+            if rs.Distance(point, point1,(0,0,0)) > 10 and rs.Distance(point1,(0,0,0)) < 11:
+                    rs.AddCurve(point2)
+            #interior lines loop concentric, comparison of position to starting points
+                    count = count +1
+
+		
+    def mandala(self):
+        color2 = self.rancolorselect
+        color1 = self.rancolorselect
+        #defining 2 colors from rancolorselect function pulling grom getcolorlist in rabbit library
+        
+        count = 0
+        step=0
+        point = []
+        c=pow(2,0.5) #defining root of 2 
+        p=math.pi #defining pi value for curves
+        
+        for d in rs.frange(0.0,(p*input("mandala curve iteration number")),(p/16)): #creating pattern
+            x= 15*math.sin(c*d)*math.cos(d)+22.5
+            y= 15*math.sin(c*d)*math.sin(d)+22.5
+            z= 0
+            pt = (x,y,z)
+            point.append(pt) #points grouped
+        
+        sp=rs.AddCurve(point) #grouped points form curve
+        rs.ObjectColor(sp, color1) #define color of curve 
+
+	
 class visualization:
     
     def getColorList(self,cls):
@@ -721,16 +876,30 @@ class visualization:
         rs.CurrentLayer(str(layerName))
         # Assign Random color from list
         
+    
     # uses Subhams color creation function "GetcolorList"
     def ranColorSelect(self, getColorList, color):
-            ranColorSelect = random.choice(range(getColorList))
+	    '''takes Getcolorlist and returns random color selection from'''
+            ranColorSelect = random.choice(range(self.getColorList))
             
     # Color by layer, colors layer and all objects in layer
     def colorLayer(self, layerNames, ranColorSelect):
-        layerNames = rs.LayerNames()
-        if layerNames:
-             for name in layerNames: rs.LayerColor(name, ranColorSelect())
-        
+	    '''takes selected layer and returns a color assignment'''
+            layerNames = rs.LayerNames()
+            if layerNames:
+                for name in layerNames: rs.LayerColor(name, self.ranColorSelect)
+		#if layername selected for the variable of color, assign the layer name, with rancolor
+
+    def ThreeDscaleObj(self):
+        '''takes object and scale factors returns scaled object'''
+    rs.ScaleObjects(rs.GetObjects("select obj to scale:"), (0,0,0), (input("input number, x axis scale factor:"), input("input number, y axis scale factor:"),  input("input number, Z axis scale factor:")))
+    	#scales user selected object, takes user input for x scale facor y scale factor and z scale factor
+
+    def assignObjColor(self, color):
+        '''assigns select object a color'''
+	self.rancolorselect = color
+        rs.ObjectColor(rs.GetObjects("select existing obj:"), color)
+	#select object color via random color select    
     
 class organization:
 
