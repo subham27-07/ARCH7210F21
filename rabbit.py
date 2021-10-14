@@ -208,7 +208,45 @@ class Drawing:
     #######################         Making random 3D           #####################
     #######################         Making random 3D           #####################
     #######################         Making random 3D           #####################
+	
+	
 
+    #######################        Generating Lines with Randomness         #####################
+
+	
+	def Randomlinegeneration(self,val):
+
+
+
+	    location = [0,0,0] #Initianl Location
+	    points=[]
+
+	    for i in range(val):
+		x=random.uniform(-1,1)
+		y=random.uniform(-1,1)
+		z=random.uniform(-1,1)
+		point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z)
+		location=(location[0]+x,location[1]+y,location[2]+z)
+
+		points.append(point)
+
+
+	    line1=rs.AddCurve(points) #add line to points
+	    line= rs.AddPolyline(points) # add curve to points
+	    #rs.DeleteObject(points)
+		
+		#implementing Randomness in color
+
+	    colors = [(193, 0, 0),(5, 46, 192),(146, 75, 96)]
+	    color = random.choice(colors)
+
+
+
+	    rs.ObjectColor (line, color=color)
+	    rs.ObjectColor (line1, color=color)
+	    rs.DeleteObject(point)
+		
+  #######################        Generating Lines with Randomness         #####################
 
 
 
