@@ -42,45 +42,25 @@ rs.AddPolyline(points)
 def myFunc():
 
     curve = rs.GetObject("please select a curve",rs.filter.curve)
-
     line  = rs.GetObject("Select a mirror line")
-
     pt    = rs.GetObject("please select a point", rs.filter.point)
-
     limitscale = rs.GetReal("please input a limit scale factor", 0.3)
-
     angle      = rs.GetReal("please input a rotate angle", 10)
-
     len        = rs.CurveLength(curve)
-
     list       = []
-
     lenlimit=limitscale*len
-
     while (len>lenlimit):
-
         if len<=lenlimit: break
-
         curve = rs.ScaleObject(curve,pt,[0.9,0.9,0.9], True)
-
         curve = rs.RotateObject(curve,pt,angle)
-
         len   = rs.CurveLength(curve)
-
         list.append(curve)
-
         view = rs.CurrentView()
-
         rs.ViewCPlane( view, rs.WorldZXPlane() )
-	
 	colors = [(193, 0, 0),(5, 46, 192),(146, 75, 96)]
-	
         color = random.choice(colors)
-
         rs.ObjectColor (curve, color=color)
-
-        Mirror1(line, list)
-
+        r.Drawing().Mirror1(line,list)
 
 myFunc()
 
@@ -89,32 +69,19 @@ myFunc()
 ####################### Random 3D ####################
 
 def myFunc():
-
 	intLength = rs.GetInteger("how many in x",30)
-
 	intWidth  = rs.GetInteger("how many in y",30)
-
 	intGen	  = rs.GetInteger("how many generations",50)
-
 	strStack  = rs.GetString ("should I stack the generations", "yes", ["yes", "no"])
-
-	arrValues = randomizeArray01(intLength,intWidth)
-
-	arrMeshes = render(arrValues,-1, strStack)
-
+	arrValues = r.Drawing().randomizeArray01(intLength,intWidth)
+	arrMeshes = r.Drawing().render(arrValues,-1, strStack)
 	for i in range(intGen):
-
-		arrValues = applyGOL(arrValues)
-
+		arrValues = r.Drawing().applyGOL(arrValues)
 		if strStack == "no" :
-
-			update(arrMeshes, arrValues)
-
+			r.Drawing().update(arrMeshes, arrValues)
 		else :
+			r.Drawing().render(arrValues,i, strStack) 
 
-			render(arrValues,i, strStack) 
-
-	
 
 myFunc()
 
