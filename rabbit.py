@@ -880,16 +880,30 @@ class visualization:
         rs.CurrentLayer(str(layerName))
         # Assign Random color from list
         
+    
     # uses Subhams color creation function "GetcolorList"
     def ranColorSelect(self, getColorList, color):
-            ranColorSelect = random.choice(range(getColorList))
+	    '''takes Getcolorlist and returns random color selection from'''
+            ranColorSelect = random.choice(range(self.getColorList))
             
     # Color by layer, colors layer and all objects in layer
     def colorLayer(self, layerNames, ranColorSelect):
-        layerNames = rs.LayerNames()
-        if layerNames:
-             for name in layerNames: rs.LayerColor(name, ranColorSelect())
-        
+	    '''takes selected layer and returns a color assignment'''
+            layerNames = rs.LayerNames()
+            if layerNames:
+                for name in layerNames: rs.LayerColor(name, self.ranColorSelect)
+		#if layername selected for the variable of color, assign the layer name, with rancolor
+
+    def ThreeDscaleObj(self):
+        '''takes object and scale factors returns scaled object'''
+    rs.ScaleObjects(rs.GetObjects("select obj to scale:"), (0,0,0), (input("input number, x axis scale factor:"), input("input number, y axis scale factor:"),  input("input number, Z axis scale factor:")))
+    	#scales user selected object, takes user input for x scale facor y scale factor and z scale factor
+
+    def assignObjColor(self, color):
+        '''assigns select object a color'''
+	self.rancolorselect = color
+        rs.ObjectColor(rs.GetObjects("select existing obj:"), color)
+	#select object color via random color select    
     
 class organization:
 
