@@ -368,6 +368,7 @@ class Drawing:
 
     # defining a random point in the allowed frame
     def randPointInRange(self):
+        '''Defines a random point in the allowed range, which is based on variables High and Low.'''
         # pick a coordinate in X range
         ran_number_x = random.uniform(self.low, self.high)
         # pick a coordinate in Y range
@@ -379,10 +380,10 @@ class Drawing:
         # add point to rhino space
         point_id = rs.AddPoint(point)
 
-    # randPointInRange()
     
     # defining a a cluster of points in the allowed frame
     def ptCluster(self):
+        '''Defines a cluster of points in the allowed range, which is based on variables High and Low.'''
         # user input for number of points
         input = rs.GetInteger("How many points? ")
         point_cluster = []
@@ -402,11 +403,11 @@ class Drawing:
             point_cluster.append(rs.AddPoint(point))
         return point_cluster
 
-    # ptCluster()
 
 
     #defines multiple points and runs a curve throught them
     def crvThroughPoints(self):
+        '''Defines multiple points and uses them as control points for a curve.'''
         #user input for number of points
         input = rs.GetInteger("How many points? ")
     
@@ -425,20 +426,22 @@ class Drawing:
             vertices.append(rs.AddPoint(point)) 
         rs.AddCurve(vertices,3)
 
-    #crvThroughPoints()
+
+
     #draws multiple random curves in 2d using crvThroughPoints function
     def multcurves(self):
+        '''Draws multiple random curves in 2d by re-triggering crvThroughPoints function a specified number of times.'''
     #input to define number of times to run the for loop
         input = rs.GetInteger("How many curves would you like? ")
         
         for i in range(input):
             crvThroughPoints()
 
-    #multcurves()
 
 
     #draws random 3d curve
     def crvThroughPoints3d(self):
+        '''Draws a curve based on multiple points defined in a 3d range, which is based on variables High and Low.'''
         #user input for number of points
         input = rs.GetInteger("How many points? ")
         
@@ -463,12 +466,12 @@ class Drawing:
         rs.AddCurve(vertices,3)
         
         
-    #crvThroughPoints3d()
 
 
     #draws 3 curves in 3d space... one in lower range, one in mid-range, and one in upper range
     #ranges are determined by global variables "low/high first/second/third" 
     def crvThroughRangedPoints3d(self):
+        '''Draws three curves in a 3d range... One in a lower range, one in a middle range, and one in an upper range. Ranges are determined by variables High/Low First/Second/Third.'''
         #user input for number of points per curve
         input = rs.GetInteger("How many points? ")
         
@@ -534,11 +537,11 @@ class Drawing:
         #add curve through points in stored variable
         rs.AddCurve(vertices3,3)
         
-    #crvThroughRangedPoints3d()
 
 
     #draws 2 curves in 3d space and lofts between them... one curve in upper range and one in lower range
     def loftFrom2(self):
+        '''Draws two curves in a 3d range and lofts between them... One curve in a lower range and one in an upper range. Ranges are determined by variables High/Low First/Second/Third.'''
         #user input for number of points
         input = rs.GetInteger("How many points per curve? ")
         
@@ -587,11 +590,11 @@ class Drawing:
         #loft between defined curves
         rs.AddLoftSrf([curve1,curve3])
         
-    #loftFrom2()
 
 
     #draws 3 curves in 3d space and lofts between them... one curve in upper range, one in mid-range, and one in lower range
     def loftFrom3(self):
+        '''Draws three curves in a 3d range and lofts between them... One curve in a lower range, one in a middle range, and one in an upper range. Ranges are determined by variables High/Low First/Second/Third.'''
         #user input for number of points
         input = rs.GetInteger("How many points? ")
         
@@ -659,8 +662,36 @@ class Drawing:
         #loft between defined curves
         rs.AddLoftSrf([curve1,curve2,curve3])
         
-    #loftFrom3()
-    
+
+
+    def ArrayPointsOnSurface(self):
+        '''Array a grid of points, defined by the user, across a single selected surface.'''
+        # Get the surface object
+        surface_id = rs.GetObject("Select surface", rs.filter.surface)
+        if surface_id is None: return
+
+        # Get the number of rows
+        rows = rs.GetInteger("Number of rows")
+        if rows is None: return
+
+        # Get the number of columns
+        columns = rs.GetInteger("Number of columns")
+        if columns is None: return
+
+        # Get the domain of the surface
+        U = rs.SurfaceDomain(surface_id, 0)
+        V = rs.SurfaceDomain(surface_id, 1)
+        if U is None or V is None: return
+
+        # Add the points
+        for i in xrange(0,rows):
+            param0 = U[0] + (((U[1] - U[0]) / (rows-1)) * i)
+            for j in xrange(0,columns):
+                param1 = V[0] + (((V[1] - V[0]) / (columns-1)) * j)
+                point = rs.EvaluateSurface(surface_id, param0, param1)
+                rs.AddPoint(point)
+
+
 
     # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
