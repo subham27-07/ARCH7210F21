@@ -407,14 +407,11 @@ class Drawing:
 
     #defines multiple points and runs a curve throught them
     def crvThroughPoints(self):
-    
-    
-    
         #user input for number of points
         input = rs.GetInteger("How many points? ")
     
         vertices = []
-    
+
         #for loop to iterate as many times as the user defined
         for p in range(input):
             #define X coordinate
@@ -717,7 +714,7 @@ class visualization:
         # assign the width to the layers name
         layerName = printWidth
         # create a new layer
-        rs.AddLayer(str(layerName), color = None)
+        rs.AddLayer(str(layerName), color)
         # change the printed width of new layer
         rs.LayerPrintWidth(str(layerName), printWidth)
         # make created layer current

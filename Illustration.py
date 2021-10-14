@@ -1,40 +1,87 @@
 import rabbit
 import random
 import rhinoscriptsyntax as rs
+import math
 
 r=rabbit
 
 # test forward method
-# r.Drawing.speed = 1
-# pts = r.Drawing().ptCluster()
+def illustration1():
+    r.Drawing.speed = 1
+    pts = r.Drawing().ptCluster()
+    for pt in pts:
+        r.Drawing.rabbit_id = pt
+        for j in range (10):
+            for i in range (10):
+                color = (255 * math.cos(j*9 * math.pi / 180), 255 * math.sin(j*9* math.pi / 180),255 *math.cos(j*9* math.pi / 180)* math.sin(j*9* math.pi / 180))
+                lineWeight = 0
+                lineWeight += ((i+1) * 0.01) + ((j+1) * 0.1)
+                r.visualization().lineWeight(lineWeight, color)
+                r.Drawing().forward(i+2)
+                r.Drawing.anglexy += i
+            r.Drawing.anglez += 60
+        rs.DeleteObjects(pt) 
 
-# print (type(pts))
-# for pt in pts:
-#     r.Drawing.rabbit_id = pt
-#     for j in range (30):
-#         for i in range (26):
-#             r.Drawing().forward(i+2)
-#             r.Drawing.anglexy += i+2
-#             r.visualization().lineWeight(int(j/10) ,r.visualization().getColorList("gray"))
-#         r.Drawing.anglez = random.randrange(-20,20)
+# illustration1()
 
-points = r.Drawing().ptCluster()
-r.Drawing().irregShape(points)
+# test forward method
+def illustration2():
+    r.Drawing.speed = 1
+    pts = r.Drawing().ptCluster()
+    for pt in pts:
+        r.Drawing.rabbit_id = pt
+        for j in range (10):
+            for i in range (10):
+                color = (255 * math.cos(j*3 * math.pi / 180), 255 * math.sin(j*3* math.pi / 180),255 * math.sin(j*3* math.pi / 180))
+                lineWeight = 0
+                lineWeight += ((i+1) * 0.01) + ((j+1) * 0.1)
+                r.visualization().lineWeight(lineWeight, color)
+                r.Drawing().forward(i+2)
+                r.Drawing.anglexy += i
+            r.Drawing.anglez += 45
+        rs.DeleteObjects(pt) 
+# illustration2()
 
+# test forward method
+def illustration3():
+    r.Drawing.speed = 1
+    pts = r.Drawing().ptCluster()
+    for pt in pts:
+        r.Drawing.rabbit_id = pt
+        for j in range (10):
+            for i in range (20):
+                color = ((255), 255 * math.sin(j*9* math.pi / 180),255 * math.cos(j*9* math.pi / 180))
+                lineWeight = 0
+                lineWeight += ((i+1) * 0.01) + ((j+1) * 0.1)
+                r.visualization().lineWeight(lineWeight, color)
+                r.Drawing().forward(i+2)
+                r.Drawing.anglexy += i * 5
+                r.Drawing.anglez += 90
+        rs.DeleteObjects(pt) 
+# illustration3()
+
+def illustration4():
+    
+    r.Drawing().loftFrom3()
+    # points = r.Drawing().ptCluster()
+    # r.Drawing().irregShape(points)
+illustration4()
 
 #Test illustration, will need to modify function
-location = [0,0,0]
-points=[]
+def illustration5():
+    location = [0,0,0]
+    points=[]
 
-for i in range(500):
-    x=random.uniform(-1,1)
-    y=random.uniform(-1,1)
-    z=random.uniform(-1,1)
-    point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z)
-    location=(location[0]+x,location[1]+y,location[2]+z)
-    points.append(point)
-rs.AddCurve(points)
-rs.AddPolyline(points)
+    for i in range(500):
+        x=random.uniform(-1,1)
+        y=random.uniform(-1,1)
+        z=random.uniform(-1,1)
+        point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z)
+        location=(location[0]+x,location[1]+y,location[2]+z)
+        points.append(point)
+    rs.AddCurve(points)
+    rs.AddPolyline(points)
+# illustration5()
 
 
 #Test illustration_2, will need to modify function
@@ -62,7 +109,7 @@ def myFunc():
         rs.ObjectColor (curve, color=color)
         r.Drawing().Mirror1(line,list)
 
-myFunc()
+# myFunc()
 
 ####################### Random 3D ####################
 ####################### Random 3D ####################
@@ -83,7 +130,7 @@ def myFunc():
 			r.Drawing().render(arrValues,i, strStack) 
 
 
-myFunc()
+#myFunc()
 
 
 ####################### Random 3D ####################
