@@ -225,7 +225,7 @@ class Drawing:
 		x=random.uniform(-1,1)
 		y=random.uniform(-1,1)
 		z=random.uniform(-1,1)
-		point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z)
+		point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z) #specify the location of points
 		location=(location[0]+x,location[1]+y,location[2]+z)
 
 		points.append(point)
@@ -923,6 +923,9 @@ class Drawing:
 class visualization:
     
     def getColorList(self,cls):
+		'''
+		This function is for to get the range of colors
+		'''
         color = {
         "red": [255, 0, 0],
         "blue": [0, 0, 255],
