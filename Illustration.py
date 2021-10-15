@@ -61,14 +61,12 @@ def illustration3():
 # illustration3()
 
 def illustration4():
-    
-    r.Drawing().loftFrom3()
-    # points = r.Drawing().ptCluster()
-    # r.Drawing().irregShape(points)
+    points = r.Drawing().XYZgrid()
+    r.Drawing().irregShape(points)
 illustration4()
 
 #Test illustration, will need to modify function
-def illustration5():
+def illustration6():
     location = [0,0,0]
     points=[]
 

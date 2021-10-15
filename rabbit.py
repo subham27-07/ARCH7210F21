@@ -21,9 +21,6 @@ class Drawing:
     # define the home point
     rabbit_id = rs.AddPoint(rabbit)
     
-    
-
-
     # mirror the lines if needed 
     
     def Mirror1(self,line, list):
@@ -295,21 +292,34 @@ class Drawing:
 
     # this function creates irregular 3D shapes
     def irregShape(self, points):
+        '''
+        Creating irregular shapes based on random number and size of sides from points as inputs
+        '''
+        # start of the width domain
+        WidthS = rs.GetInteger("insert the start number for width domain",minimum = 1)
+        # end of the width domain
+        WidthE = rs.GetInteger("insert the end number for width domain",minimum = 1)
+        # start of the height domain
+        HeightS = rs.GetInteger("insert the start number for height domain",minimum = 1)
+        # end of the height domain
+        HeightE = rs.GetInteger("insert the end number for height domain",minimum = 1)
+        
         for point in points:
             pt = rs.coerce3dpoint(point)
             # randomely choose how many sides have each shape
             side = random.randrange(7,15)
             # random side size between range(5,20)
-            sideSize = random.randrange(5,20)
+            sideW = random.randrange(WidthS,WidthE)
+            sideL = random.randrange(HeightS,HeightE)
             # get the corner points 
-            pt1 = (pt[0] + sideSize/2, pt[1] + sideSize/2, pt[2] + sideSize/2)
-            pt2 = (pt[0] - sideSize/2, pt[1] + sideSize/2, pt[2] + sideSize/2)
-            pt3 = (pt[0] + sideSize/2, pt[1] - sideSize/2, pt[2] + sideSize/2)
-            pt4 = (pt[0] - sideSize/2, pt[1] - sideSize/2, pt[2] + sideSize/2)
-            pt5 = (pt[0] + sideSize/2, pt[1] + sideSize/2, pt[2] - sideSize/2)
-            pt6 = (pt[0] - sideSize/2, pt[1] + sideSize/2, pt[2] - sideSize/2)
-            pt7 = (pt[0] + sideSize/2, pt[1] - sideSize/2, pt[2] - sideSize/2)
-            pt8 = (pt[0] - sideSize/2, pt[1] - sideSize/2, pt[2] - sideSize/2)
+            pt1 = (pt[0] + sideL/2, pt[1] + sideL/2, pt[2] + sideW/2)
+            pt2 = (pt[0] - sideL/2, pt[1] + sideL/2, pt[2] + sideW/2)
+            pt3 = (pt[0] + sideL/2, pt[1] - sideL/2, pt[2] + sideW/2)
+            pt4 = (pt[0] - sideL/2, pt[1] - sideL/2, pt[2] + sideW/2)
+            pt5 = (pt[0] + sideL/2, pt[1] + sideL/2, pt[2] - sideW/2)
+            pt6 = (pt[0] - sideL/2, pt[1] + sideL/2, pt[2] - sideW/2)
+            pt7 = (pt[0] + sideL/2, pt[1] - sideL/2, pt[2] - sideW/2)
+            pt8 = (pt[0] - sideL/2, pt[1] - sideL/2, pt[2] - sideW/2)
             pts = [pt1,pt3,pt4,pt2,pt5,pt7,pt8,pt6]
             # creat the box
             box = rs.AddBox(pts)
@@ -325,7 +335,7 @@ class Drawing:
                 # draw the plan with the calculted vector as normal
                 cutPlane = rs.PlaneFromNormal(centerPt,vector)
                 # create a circle 
-                cutCirc = rs.AddCircle(cutPlane,40)
+                cutCirc = rs.AddCircle(cutPlane,80)
                 # get the line from box center to edge
                 curve0 = rs.AddLine(centerPt,pt)
                 # get the curve domain
@@ -670,52 +680,56 @@ class Drawing:
         for i in range(0, 100, 10):
             for j in range(0, 100, 10):
                 # sets height variable to random integer from 0 to 100
-                height = random.choice(range(100))
+                height = random.choice(range(80))
+                point = rs.AddPoint(i, j, height)
                 # generates point on xy grid layout and z at random heights
-                gridpts.append(rs.AddPoint(i, j, height))
+                gridpts.append(point)
+                print(type(point))
+        return gridpts
+
 
     # allObjs = rs.AllObjects()
     # rs.DeleteObjects(allObjs)
 
 
     def threeHeightCurves(self):
-     '''takes 3 selected returns grid of 3 heigh veriation curves'''
-    #Has user select 3 points from rhino model or create and select
-    pointA = rs.GetObject("Select point A")
-    pointB = rs.GetObject("Select point B")
-    pointC = rs.GetObject("Select point C")
-    
-    pointList = []
-    #empty point list   
-    axis = []  
-    #empty axis list
-    for i in range(100):
-    #create list of points and store in a 2-dimesional list
-        points = []
-        for j in range(100):
-            points.append(rs.AddPoint(i,j,0))
-        pointList.append(points)
-        #creates grid of points an adds to 2d list
+        '''takes 3 selected returns grid of 3 heigh veriation curves'''
+        #Has user select 3 points from rhino model or create and select
+        pointA = rs.GetObject("Select point A")
+        pointB = rs.GetObject("Select point B")
+        pointC = rs.GetObject("Select point C")
         
-    # draw vertical lines of different length based on proximity to the 3 points. 
-    for i in range(len(pointList)):
-    #len returns the list length
-    #conditional loop, compares point location in grid to one point at a time
-        for j in range(len(pointList[i])):
-            disA = rs.Distance(pointList[i][j],pointA)
-            disB = rs.Distance(pointList[i][j],pointB)
-            disC = rs.Distance(pointList[i][j],pointC)
-            coords = rs.PointCoordinates(pointList[i][j])
-            #sets up parameters for if else statement, grid point cordinates from list, and 3 input points
-            if disA < disB and disA<disC:
-                axis.append(rs.AddLine(pointList[i][j],(coords[0],coords[1],35)))
-                #if grid point CLOSEST to pointA, add line height 35
-            elif disB<disA and disB < disC:
-                axis.append(rs.AddLine( pointList[i][j],(coords[0],coords[1],40)))
-                #if grid point CLOSEST to pointB, add line height 40
-            else:
-                axis.append(rs.AddLine(pointList[i][j] ,(coords[0],coords[1],65)))
-                #if grid point CLOSEST to pointC, add line height 65
+        pointList = []
+        #empty point list   
+        axis = []  
+        #empty axis list
+        for i in range(100):
+        #create list of points and store in a 2-dimesional list
+            points = []
+            for j in range(100):
+                points.append(rs.AddPoint(i,j,0))
+            pointList.append(points)
+            #creates grid of points an adds to 2d list
+            
+        # draw vertical lines of different length based on proximity to the 3 points. 
+        for i in range(len(pointList)):
+        #len returns the list length
+        #conditional loop, compares point location in grid to one point at a time
+            for j in range(len(pointList[i])):
+                disA = rs.Distance(pointList[i][j],pointA)
+                disB = rs.Distance(pointList[i][j],pointB)
+                disC = rs.Distance(pointList[i][j],pointC)
+                coords = rs.PointCoordinates(pointList[i][j])
+                #sets up parameters for if else statement, grid point cordinates from list, and 3 input points
+                if disA < disB and disA<disC:
+                    axis.append(rs.AddLine(pointList[i][j],(coords[0],coords[1],35)))
+                    #if grid point CLOSEST to pointA, add line height 35
+                elif disB<disA and disB < disC:
+                    axis.append(rs.AddLine( pointList[i][j],(coords[0],coords[1],40)))
+                    #if grid point CLOSEST to pointB, add line height 40
+                else:
+                    axis.append(rs.AddLine(pointList[i][j] ,(coords[0],coords[1],65)))
+                    #if grid point CLOSEST to pointC, add line height 65
                 
 
     def SpheresonPts(self):
@@ -754,7 +768,7 @@ class Drawing:
                 #sets up for loop, perimeter set up grid x and y
                 rs.AddPoint(i, j, 0)
                 #point added coordinates x and y no z
-    print xyGrid( input("grid x number:"), input("grid y number:"))
+        print (xyGrid( input("grid x number:"), input("grid y number:")))
     #for, x and y produced as input x and y organize grid of points 2d
     
     def ObjPoints(self):
@@ -892,18 +906,19 @@ class visualization:
 
     def ThreeDscaleObj(self):
         '''takes object and scale factors returns scaled object'''
-    rs.ScaleObjects(rs.GetObjects("select obj to scale:"), (0,0,0), (input("input number, x axis scale factor:"), input("input number, y axis scale factor:"),  input("input number, Z axis scale factor:")))
+        rs.ScaleObjects(rs.GetObjects("select obj to scale:"), (0,0,0), (input("input number, x axis scale factor:"), input("input number, y axis scale factor:"),  input("input number, Z axis scale factor:")))
     	#scales user selected object, takes user input for x scale facor y scale factor and z scale factor
 
     def assignObjColor(self, color):
         '''assigns select object a color'''
 	self.rancolorselect = color
         rs.ObjectColor(rs.GetObjects("select existing obj:"), color)
-	#select object color via random color select    
-    
-class organization:
+	    #select object color via random color select    
 
-     # Assign to layers
+
+class organization:
+    
+    # Assign to layers
     def CopyObjectsToLayer(self):
         '''
         Copy selected objects to a seperate layer
