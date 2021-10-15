@@ -24,6 +24,7 @@ class Drawing:
     # mirror the lines if needed 
     
     def Mirror1(self,line, list):
+	'''This function takes the line and mirrors it and appends it to list '''
         objs = list
         for i in range(12):
             line1   = rs.RotateObject(line, rs.CurveEndPoint(line), 15, None, copy=False)
@@ -40,6 +41,7 @@ class Drawing:
 
 
     def Mirror2(self,line1, list1):
+	'''This function first line and appends it to 2nd list of line and creates mirror'''
         objs = list1
         for i in range(12):
             line2 = rs.RotateObject(line1, rs.CurveEndPoint(line1), 15, None, copy=False)
@@ -51,6 +53,7 @@ class Drawing:
 
 
     def Mirror3(self,line2, list2, line1):
+	'''This function first line and appends it to 3nd list of line and creates mirror'''
         objs = list2
         for i in range(15):
             line3 = rs.RotateObject(line2, rs.CurveEndPoint(line2), 15, None, copy=False)
@@ -69,140 +72,43 @@ class Drawing:
         
     # mirror the lines ends here
     
-    #######################         Making random 3D           #####################
-    #######################         Making random 3D           #####################
-    #######################         Making random 3D           #####################
-    def colorObject(self,strObject, dblValue):
 
-	lngColor = [255,215,105]
-	rs.ObjectColor(strObject, lngColor)
-	intMaterialIndex = rs.AddMaterialToObject (strObject)
-	rs.MaterialColor(intMaterialIndex, lngColor)
+    #######################        Generating Lines with Randomness         #####################
 
-    def addMeshQuad(self,arrPoints):
-        arrFaceVertices = []
-        arrFaceVertices.append([0,1,2,3])
-        return rs.AddMesh (arrPoints, arrFaceVertices)
-
-    def addMeshBox(self,arrMinCorner, arrMaxCorner):
-
-        arrVertices = []
-        arrVertices.append([arrMinCorner[0], arrMinCorner[1], arrMinCorner[2]]) #0
-        arrVertices.append([arrMaxCorner[0], arrMinCorner[1], arrMinCorner[2]]) #1
-        arrVertices.append([arrMaxCorner[0], arrMaxCorner[1], arrMinCorner[2]]) #2
-        arrVertices.append([arrMinCorner[0], arrMaxCorner[1], arrMinCorner[2]]) #3
-        arrVertices.append([arrMinCorner[0], arrMinCorner[1], arrMaxCorner[2]]) #4
-        arrVertices.append([arrMaxCorner[0], arrMinCorner[1], arrMaxCorner[2]]) #5
-        arrVertices.append([arrMaxCorner[0], arrMaxCorner[1], arrMaxCorner[2]]) #6
-        arrVertices.append([arrMinCorner[0], arrMaxCorner[1], arrMaxCorner[2]]) #7
-        arrFaceVertices = []
-        arrFaceVertices.append([0,3,2,1]) 
-        arrFaceVertices.append([0,1,5,4]) 
-        arrFaceVertices.append([1,2,6,5]) 
-        arrFaceVertices.append([2,3,7,6])
-        arrFaceVertices.append([3,0,4,7])
-        arrFaceVertices.append([4,5,6,7])
-        return rs.AddMesh (arrVertices, arrFaceVertices)
+	
+	def Randomlinegeneration(val):
 
 
 
+	    location = [0,0,0] #Initianl Location
+	    points=[]
 
-    #could be removed from function
-    def update(self,arrMeshes, arrValues):
-        rs.EnableRedraw(False)
-        for i in range(len(arrValues)) :
-            for j in range(len(arrValues[i])):
-                colorObject(arrMeshes[i][j], arrValues[i][j])
+	    for i in range(val):
+		x=random.uniform(-1,1)
+		y=random.uniform(-1,1)
+		z=random.uniform(-1,1)
+		point=rs.AddPoint(location[0]+x,location[1]+y,location[2]+z) #specify the location of points
+		location=(location[0]+x,location[1]+y,location[2]+z)
 
-        #rs.GetString("continue")
-        rs.EnableRedraw(True)
-        return arrMeshes
+		points.append(point)
 
 
+	    line1=rs.AddCurve(points) #add line to points
+	    line= rs.AddPolyline(points) # add curve to points
+	    #rs.DeleteObject(points)
+		
+		#implementing Randomness in color
 
-    def render(self,arrValues, z, strStack):
-        rs.EnableRedraw(False)
-        arrMeshes = []
-        for i in range(len(arrValues)):
-            arrRow = []
-            for j in range(len(arrValues[i])):
-                if strStack == "no" :
-                    arrPoints = [[i-0.5,len(arrValues[i])-j-0.5,0],[i+0.5,len(arrValues[i])-j-0.5,0],[i+0.5,len(arrValues[i])-j+0.5,0],[i-0.5,len(arrValues[i])-j+0.5,0]]
-                    arrRow.append(addMeshQuad(arrPoints))	
-                    colorObject(arrRow[j], arrValues[i][j])
-
-                else :
-                    if arrValues[i][j] == 1 :
-                        arrRow.append(addMeshBox([(i-0.5),(len(arrValues[i])-j-0.5),z-0.5], [(i+0.5),(len(arrValues[i])-j+0.5),z+0.5]))
-                        #colorObject(arrMeshes[i][j], arrValues[i][j])
-
-            arrMeshes.append(arrRow)
-        rs.EnableRedraw(True)
-        return arrMeshes
+	    colors = [(193, 0, 0),(5, 46, 192),(146, 75, 96)]
+	    color = random.choice(colors)
 
 
 
-    def sumNeighbors(self,arrValues, i, j, blnSelf):
-        iplus1  = i+1
-        iminus1 = i-1
-        if i == 0 : iminus1 = len(arrValues)-1
-        if i == len(arrValues)-1 : iplus1 = 0
-        jplus1  = j+1
-        jminus1 = j-1
-        if j == 0 : jminus1 = len(arrValues[i])-1
-        if j == len(arrValues[i])-1 : jplus1 = 0	
-        dblSum  = 0
-        dblSum = dblSum + arrValues[iminus1][jminus1]
-        dblSum = dblSum + arrValues[i      ][jminus1]
-        dblSum = dblSum + arrValues[iplus1 ][jminus1]
-        dblSum = dblSum + arrValues[iminus1][j      ]
-        if blnSelf : dblSum = dblSum + arrValues[i][j]
-        dblSum = dblSum + arrValues[iplus1 ][j      ]
-        dblSum = dblSum + arrValues[iminus1][jplus1 ]
-        dblSum = dblSum + arrValues[i      ][jplus1 ]
-        dblSum = dblSum + arrValues[iplus1 ][jplus1 ]
-        return dblSum	
-
-
-
-    def applyGOL(self,arrValues):
-        arrNewValues = []
-        for i in range(len(arrValues)): 
-            arrRow = []
-            for j in range(len(arrValues[i])):
-                dblSum = sumNeighbors(arrValues, i, j, False)
-                if arrValues[i][j] == 1 :
-                    if dblSum < 2 :
-                        arrRow.append(0)
-                    elif dblSum > 3 :
-                        arrRow.append(0)
-                    else :
-                        arrRow.append(1)
-                else :
-                    if dblSum == 3 :
-                        arrRow.append(1)
-                    else :
-                        arrRow.append(0)
-            arrNewValues.append(arrRow)
-        return arrNewValues
-
-
-    def randomizeArray01(self,intLength,intWidth):
-        rnd = random.Random()
-        arr = []
-        for i in range(intLength):
-            arrj = []
-            for j in range(intWidth):
-                if rnd.random()<0.5 :
-                    arrj.append(0)
-                else:
-                    arrj.append(1)
-            arr.append(arrj)
-        return arr
-    #######################         Making random 3D           #####################
-    #######################         Making random 3D           #####################
-    #######################         Making random 3D           #####################
-
+	    rs.ObjectColor (line, color=color)
+	    rs.ObjectColor (line1, color=color)
+	    rs.DeleteObject(point)
+		
+  #######################        Generating Lines with Randomness         #####################
 
 
 
@@ -378,6 +284,7 @@ class Drawing:
 
     # defining a random point in the allowed frame
     def randPointInRange(self):
+        '''Defines a random point in the allowed range, which is based on variables High and Low.'''
         # pick a coordinate in X range
         ran_number_x = random.uniform(self.low, self.high)
         # pick a coordinate in Y range
@@ -389,10 +296,10 @@ class Drawing:
         # add point to rhino space
         point_id = rs.AddPoint(point)
 
-    # randPointInRange()
     
     # defining a a cluster of points in the allowed frame
     def ptCluster(self):
+        '''Defines a cluster of points in the allowed range, which is based on variables High and Low.'''
         # user input for number of points
         input = rs.GetInteger("How many points? ")
         point_cluster = []
@@ -412,11 +319,11 @@ class Drawing:
             point_cluster.append(rs.AddPoint(point))
         return point_cluster
 
-    # ptCluster()
 
 
     #defines multiple points and runs a curve throught them
     def crvThroughPoints(self):
+        '''Defines multiple points and uses them as control points for a curve.'''
         #user input for number of points
         input = rs.GetInteger("How many points? ")
     
@@ -435,20 +342,22 @@ class Drawing:
             vertices.append(rs.AddPoint(point)) 
         rs.AddCurve(vertices,3)
 
-    #crvThroughPoints()
+
+
     #draws multiple random curves in 2d using crvThroughPoints function
     def multcurves(self):
+        '''Draws multiple random curves in 2d by re-triggering crvThroughPoints function a specified number of times.'''
     #input to define number of times to run the for loop
         input = rs.GetInteger("How many curves would you like? ")
         
         for i in range(input):
             crvThroughPoints()
 
-    #multcurves()
 
 
     #draws random 3d curve
     def crvThroughPoints3d(self):
+        '''Draws a curve based on multiple points defined in a 3d range, which is based on variables High and Low.'''
         #user input for number of points
         input = rs.GetInteger("How many points? ")
         
@@ -473,12 +382,12 @@ class Drawing:
         rs.AddCurve(vertices,3)
         
         
-    #crvThroughPoints3d()
 
 
     #draws 3 curves in 3d space... one in lower range, one in mid-range, and one in upper range
     #ranges are determined by global variables "low/high first/second/third" 
     def crvThroughRangedPoints3d(self):
+        '''Draws three curves in a 3d range... One in a lower range, one in a middle range, and one in an upper range. Ranges are determined by variables High/Low First/Second/Third.'''
         #user input for number of points per curve
         input = rs.GetInteger("How many points? ")
         
@@ -544,11 +453,11 @@ class Drawing:
         #add curve through points in stored variable
         rs.AddCurve(vertices3,3)
         
-    #crvThroughRangedPoints3d()
 
 
     #draws 2 curves in 3d space and lofts between them... one curve in upper range and one in lower range
     def loftFrom2(self):
+        '''Draws two curves in a 3d range and lofts between them... One curve in a lower range and one in an upper range. Ranges are determined by variables High/Low First/Second/Third.'''
         #user input for number of points
         input = rs.GetInteger("How many points per curve? ")
         
@@ -597,11 +506,11 @@ class Drawing:
         #loft between defined curves
         rs.AddLoftSrf([curve1,curve3])
         
-    #loftFrom2()
 
 
     #draws 3 curves in 3d space and lofts between them... one curve in upper range, one in mid-range, and one in lower range
     def loftFrom3(self):
+        '''Draws three curves in a 3d range and lofts between them... One curve in a lower range, one in a middle range, and one in an upper range. Ranges are determined by variables High/Low First/Second/Third.'''
         #user input for number of points
         input = rs.GetInteger("How many points? ")
         
@@ -669,8 +578,36 @@ class Drawing:
         #loft between defined curves
         rs.AddLoftSrf([curve1,curve2,curve3])
         
-    #loftFrom3()
-    
+
+
+    def ArrayPointsOnSurface(self):
+        '''Array a grid of points, defined by the user, across a single selected surface.'''
+        # Get the surface object
+        surface_id = rs.GetObject("Select surface", rs.filter.surface)
+        if surface_id is None: return
+
+        # Get the number of rows
+        rows = rs.GetInteger("Number of rows")
+        if rows is None: return
+
+        # Get the number of columns
+        columns = rs.GetInteger("Number of columns")
+        if columns is None: return
+
+        # Get the domain of the surface
+        U = rs.SurfaceDomain(surface_id, 0)
+        V = rs.SurfaceDomain(surface_id, 1)
+        if U is None or V is None: return
+
+        # Add the points
+        for i in xrange(0,rows):
+            param0 = U[0] + (((U[1] - U[0]) / (rows-1)) * i)
+            for j in xrange(0,columns):
+                param1 = V[0] + (((V[1] - V[0]) / (columns-1)) * j)
+                point = rs.EvaluateSurface(surface_id, param0, param1)
+                rs.AddPoint(point)
+
+
 
     # Create organized XY grid of points, arranged along Z axis
     # points grid from coordinate list, points 0 to possibly 40 every 5 units
@@ -865,6 +802,9 @@ class Drawing:
 class visualization:
     
     def getColorList(self,cls):
+		'''
+		This function is for to get the range of colors
+		'''
         color = {
         "red": [255, 0, 0],
         "blue": [0, 0, 255],
@@ -911,7 +851,7 @@ class visualization:
 
     def assignObjColor(self, color):
         '''assigns select object a color'''
-	self.rancolorselect = color
+	self.ranColorSelect = color
         rs.ObjectColor(rs.GetObjects("select existing obj:"), color)
 	    #select object color via random color select    
 
